@@ -134,8 +134,11 @@ section {
 	width: 100%;
 	background: #fff;
 }
+#nav-tabis{
+	border-radius: 5px;
+}
 .resume {
-	background-image: url('../images/images.jpg');
+	background-image: url('https://hdqwalls.com/download/firewatch-sd-2560x1440.jpg');
 	padding: 100px 0;
 
   /* Full height */
@@ -1139,6 +1142,7 @@ nav {
 	border: 1px solid #346abb;
 	background: #346abb;
 	color: #fff;
+
 }
 .tabs.style-2 {
 }
@@ -1255,6 +1259,9 @@ nav {
 .nav-tabs.tabs.style-3 .nav li.active a {
 	background: none;
 	border-bottom: 2px solid #eeb013;
+}
+nav #tab-navis .active {
+	border-radius: 5px;
 }
 .nav-tabs.tabs.style-3 .nav li:hover a {
 	background: none;
