@@ -1,0 +1,1 @@
+Please right-click on the .zip file and "extract all" to a new folder. To open the webpage, open about-me.html inside the extracted folder.
