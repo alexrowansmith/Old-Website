@@ -123,6 +123,9 @@ a {
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
+article img {
+	width: 850px;
+}
 /*=======================================================
       SECTION
 ========================================================*/
@@ -132,8 +135,17 @@ section {
 	background: #fff;
 }
 .resume {
-	background: blue;
+	background-image: url('../images/images.jpg');
 	padding: 100px 0;
+
+  /* Full height */
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 h5.tittle {
 	font-size: 18px;
@@ -578,13 +590,17 @@ h5.tittles {
 	margin-right: 5px;
 }
 .rights {
-	background: #dcdcde;
+	background: #346abb;
 	padding: 20px 0;
+	color: #f5f5f5;
 	text-align: center;
 }
 .rights p {
 	margin: 0px;
-	color: #2f2f3d;
+	color: #f5f5f5;
+}
+nav {
+	width: 100%;
 }
 /*=======================================================
 			Resune Edit
