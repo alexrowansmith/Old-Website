@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="js.js"></script>
+  <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script>
+var ITEManimate = ({
+    start: 0,
+    bezier: function(p0, p1, p2, p3) {
+        return ITEManimate.polyBez([p0, p1], [p2, p3]);
+
+    },
+    polyBez: function(p1, p2) {
+        var A = [null, null],
+            B = [null, null],
+            C = [null, null],
+            bezCoOrd = function(t, ax) {
+                C[ax] = 3 * p1[ax], B[ax] = 3 * (p2[ax] - p1[ax]) - C[ax], A[ax] = 1 - C[ax] - B[ax];
+                return t * (C[ax] + t * (B[ax] + t * A[ax]));
+            },
+            xDeriv = function(t) {
+                return C[0] + t * (2 * B[0] + 3 * A[0] * t);
+            },
+            xForT = function(t) {
+                var x = t,
+                    i = 0,
+                    z;
+                while (++i < 14) {
+                    z = bezCoOrd(x, 0) - t;
+                    if (Math.abs(z) < 1e-3) break;
+                    x -= z / xDeriv(x);
+                }
+                return x;
+            };
+        return function(t) {
+            return bezCoOrd(xForT(t), 1);
+        }
+    }
+});
+
+
+//CUSTOM JS CODE
+(function($) {
+    'use strict';
+
+    //VIEWPORT
+    var w = $(window);
+
+    //ANIMATION
+    var animationTrigger = $('.trigger');
+    var sceneContainer = $('.slide-wrapper');
+    var smallCircles = $('.small-circle');
+    var square = $('.square');
+    var portfolioContainer = $('.portfolio-wrapper');
+
+    var main = {
+
+        init: function() {
+            var self = this;
+            //GSAP ANIMATE
+            main.animate();
+        },
+
+        //GSAP ANIMATION
+        animate: function() {
+
+            //OPEN
+            function openAnimation() {
+                TweenMax.to(sceneContainer, 0.8, {
+                    height: "100%",
+                    ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                    top: "0%",
+                    ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                    width: "100%",
+                    ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                    left: "0%",
+                    ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+
+                    onComplete: function() {
+                      console.log(sceneContainer);
+                        TweenMax.to(portfolioContainer, 1.8, {
+                            width: "100%",
+                            ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                            top: "30%",
+                            ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815)
+                        })
+                        TweenMax.to(sceneContainer, 0.8, {
+                            top: "-70%",
+                            ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                        })
+                    }
+                });
+
+                TweenMax.to(smallCircles, 0.4, {
+                    scale: "0",
+                    ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+
+                });
+
+            }
+
+            //CLOSE
+            function closeAnimation() {
+                TweenMax.to(portfolioContainer, 1.2, {
+                    top: "100%",
+                    ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                    width: "100%",
+                    ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+
+                    onComplete: function() {
+                        TweenMax.to(sceneContainer, 0.8, {
+                            height: "90%",
+                            ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                            top: "5%",
+                            ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                            width: "90%",
+                            ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                            left: "5%",
+                            ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                            onComplete: function() {
+                                TweenMax.to(smallCircles, 0.4, {
+                                    scale: "1",
+                                    ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+
+                                });
+
+                            }
+
+                        });
+                    }
+
+                })
+
+            }
+
+            animationTrigger.click(function() {
+                if ($(this).attr('data-toggle') == 'closed') {
+                    $(this).attr('data-toggle', 'opened');
+                    openAnimation();
+                } else if ($(this).attr('data-toggle', 'opened')) {
+                    $(this).attr('data-toggle', 'closed');
+                    closeAnimation();
+                }
+            });
+        }
+    };
+
+    $(window).resize(function() {});
+    return main.init();
+}($));
+</script>
+<script>
+function openNav() {
+  $('.sidebartext').show();
+  $('.latest-post').show();
+  document.getElementById("mySidebar").style.width = "350px";
+  document.getElementById("main").style.marginLeft = "350px";
+  document.getElementById("nav1").style.marginLeft = "-350px";
+  $('.sidebartext').addClass('fade-in');
+  $('.latest-post').addClass('fade-in1');
+  document.getElementById('mySidebar').style.borderRight = "1px solid white";
+
+}
+
+function closeNav() {
+  document.getElementById('mySidebar').style.borderRight = 'none';
+  $('.sidebartext').hide();
+  $('.latest-post').hide();
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("nav1").style.marginLeft= "0";
+  document.getElementById("main").style.marginLeft= "0";
+  $("#button").show()
+  $('.activity').show();
+}
+</script>
+<script>
+$(document).ready(function() {
+  $("#button").click(function () {
+   $("#button").hide();
+   $("#button1").hide()
+
+  });
+  $("#close").click(function () {
+   $("#button").show()
+   $("#button1").show()
+  });
+ });
+</script>
+<script>
+$(document).ready(function() {
+  $("#button1").click(function () {
+   $("#button1").hide()
+  });
+  $("#close1").click(function () {
+   $("#button1").show()
+  });
+ });
+</script>
+<script>
+/**
+* ITEManimate object is used to animate ease with bezier functions
+* example: TweenMax.to($('selector'), 1.5, {left:"80%", ease: ITEManimate.bezier(0.04,0.86,0.8,1)});
+*
+* Used: https://github.com/rdallasgray/bez
+ Forked from: https://codepen.io/karlovidek/pen/qOxYjp
+*/
+var ITEManimate = ({
+  start: 0,
+  bezier: function(p0, p1, p2, p3) {
+      return ITEManimate.polyBez([p0, p1], [p2, p3]);
+
+  },
+  polyBez: function(p1, p2) {
+      var A = [null, null],
+          B = [null, null],
+          C = [null, null],
+          bezCoOrd = function(t, ax) {
+              C[ax] = 3 * p1[ax], B[ax] = 3 * (p2[ax] - p1[ax]) - C[ax], A[ax] = 1 - C[ax] - B[ax];
+              return t * (C[ax] + t * (B[ax] + t * A[ax]));
+          },
+          xDeriv = function(t) {
+              return C[0] + t * (2 * B[0] + 3 * A[0] * t);
+          },
+          xForT = function(t) {
+              var x = t,
+                  i = 0,
+                  z;
+              while (++i < 14) {
+                  z = bezCoOrd(x, 0) - t;
+                  if (Math.abs(z) < 1e-3) break;
+                  x -= z / xDeriv(x);
+              }
+              return x;
+          };
+      return function(t) {
+          return bezCoOrd(xForT(t), 1);
+      }
+  }
+});
+
+
+//CUSTOM JS CODE
+(function($) {
+  'use strict';
+
+  //VIEWPORT
+  var w = $(window);
+
+  //ANIMATION
+  var animationTrigger = $('.trigger');
+  var sceneContainer = $('.slide-wrapper');
+  var square = $('.square');
+  var portfolioContainer = $('.portfolio-wrapper');
+
+  var main = {
+
+      init: function() {
+          var self = this;
+          //GSAP ANIMATE
+          main.animate();
+      },
+
+      //GSAP ANIMATION
+      animate: function() {
+
+          //OPEN
+          function openAnimation() {
+              TweenMax.to(sceneContainer, 0.8, {
+                  height: "100%",
+                  ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                  top: "0%",
+                  ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                  width: "100%",
+                  ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                  left: "0%",
+                  ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+
+                  onComplete: function() {
+                    console.log(sceneContainer);
+                      TweenMax.to(portfolioContainer, 1.8, {
+                          width: "100%",
+                          ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                          top: "30%",
+                          ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815)
+                      })
+                      TweenMax.to(sceneContainer, 0.8, {
+                          top: "-70%",
+                          ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+                      })
+                  }
+              });
+
+              TweenMax.to(square, 0.4, {
+                  scale: "0",
+                  ease: ITEManimate.bezier(0.930, 0.035, 0.350, 0.815),
+
+              });
+
+          }
+
+          //CLOSE
+          function closeAnimation() {
+              TweenMax.to(portfolioContainer, 1.2, {
+                  top: "100%",
+                  ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                  width: "100%",
+                  ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+
+                  onComplete: function() {
+                      TweenMax.to(sceneContainer, 0.8, {
+                          height: "90%",
+                          ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                          top: "5%",
+                          ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                          width: "90%",
+                          ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                          left: "5%",
+                          ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+                          onComplete: function() {
+                              TweenMax.to(square, 0.4, {
+                                  scale: "1",
+                                  ease: ITEManimate.bezier(0.815, 0.035, 0.350, 0.930),
+
+                              });
+
+                          }
+
+                      });
+                  }
+
+              })
+
+          }
+
+          animationTrigger.click(function() {
+              if ($(this).attr('data-toggle') == 'closed') {
+                  $(this).attr('data-toggle', 'opened');
+                  openAnimation();
+              } else if ($(this).attr('data-toggle', 'opened')) {
+                  $(this).attr('data-toggle', 'closed');
+                  closeAnimation();
+              }
+          });
+      }
+  };
+
+  $(window).resize(function() {});
+  return main.init();
+}($));
+</script>
+<script>
+function hideall() {
+  $('body *:not(#mySidebar1,#mySidebar2,#mySidebar3, #close1,#close2,#close3, #sb, #carousel__slide1, #carousel__slide2,.activity, #carousel__slide3, #carousel__slide4)').fadeOut('swing');
+}
+function openNav1() {
+  hideall();
+  $('#mySidebar1').show();
+  document.getElementById("mySidebar1").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+  $('.activity').addClass('fade-in');
+}
+
+function closeNav1() {
+  closeNav();
+  document.getElementById("mySidebar1").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('body *').fadeIn();
+  $('#mySidebar1').addClass('overflowhid');
+  $('.sidebar1 a').addClass('white');
+  $('#mySidebar1').fadeOut(400);
+}
+function openNav2() {
+  hideall();
+  $('#mySidebar2').show();
+  $('.activity2').addClass('fade-in');
+  document.getElementById("mySidebar2").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function closeNav2() {
+  closeNav();
+  document.getElementById("mySidebar2").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('body *').fadeIn();
+  $('#mySidebar2').addClass('overflowhid');
+  $('.sidebar2 a').addClass('white');
+  $('#mySidebar2').fadeOut(400);
+}
+function openNav3() {
+  hideall();
+  $('#mySidebar3').show();
+  $('.activity3').addClass('fade-in');
+  document.getElementById("mySidebar3").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function closeNav3() {
+  closeNav();
+  document.getElementById("mySidebar3").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('body *').fadeIn();
+  $('#mySidebar3').addClass('overflowhid');
+  $('.sidebar3 a').addClass('white');
+  $('#mySidebar3').fadeOut(400);
+}
+function nextNav12() {
+  document.getElementById("mySidebar1").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar2').show();
+  $('.activity2').addClass('fade-in');
+  document.getElementById("mySidebar2").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function nextNav23() {
+  document.getElementById("mySidebar2").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar3').show();
+  $('.activity3').addClass('fade-in');
+  document.getElementById("mySidebar3").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function nextNav31() {
+  document.getElementById("mySidebar3").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar1').show();
+  $('.activity1').addClass('fade-in');
+  document.getElementById("mySidebar1").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function nextNav32() {
+  document.getElementById("mySidebar3").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar2').show();
+  $('.activity2').addClass('fade-in');
+  document.getElementById("mySidebar2").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function nextNav21() {
+  document.getElementById("mySidebar2").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar1').show();
+  $('.activity1').addClass('fade-in');
+  document.getElementById("mySidebar1").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+function nextNav13() {
+  document.getElementById("mySidebar1").style.width = "0";
+  document.getElementById("main").style.marginRight= "0";
+  $('#mySidebar3').show();
+  $('.activity3').addClass('fade-in');
+  document.getElementById("mySidebar3").style.width = "100%";
+  document.getElementById("main").style.marginRight = "100%";
+}
+</script>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="slick/slick.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
+<link rel="html" href="maincont.html">
+<link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+<title>Alex Rowan-Smith</title>
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAXeUlEQVR4Xu2dCZhVxZXHf9UgAgoSgYAb7iDgvuCCK4qAKKBAIu7GaIzjqOMCr9FR9It0g8tIxjguoxJj1ERc0DgqLnEBNxRUXABxwWVAEEQFRKC78p13+8Hr13epqnvf7df46vv87I9XderUqf89derUqVOKDbGM1V2poBuanVBsC2yNpjOK9kA7oHPAsBcCy9AsQSF/f4lmPop51DKH0WruhiYu1eQHVK27UEFvajgAxb7AnkDrIo1rJfA2mjdpxmvUMo2M+rxIfaVCtmkCYLzuTy390fRF0SMVSQV38j7wLBU8xUj1VCPzYt190wFAtR4IDEMxBJ1V46VYvgMeASaRUU+UIoOFPJU2AMZpWcfPAM4COjYFgebxuBi4E8VERqk5pcp7aQKgWvcDzgWGlKrgLPkSrXAbGfW0ZbuiVy8tAIzTw9BcCBxc9JE3TgdT0dxEpXqocbpv2GtpAGC8PpYaMih6l4pgiszHVCoYx0j1jyL3E0m+cQFQpfdCcRUwOJLTDbPCZDRXU6lmNtbwGgcAY3QFLakCRjbWwEus3/GsopIxqjZtvtIHwFg9iAquA7qmPdgS728utVzGaPVYmnymC4AqPQHFBWkOsMn1pfkjlUoM4VRKOgCo0vuhuBXYO5VRNf1OZqA5l0o1vdhDKT4AqvXZwO3FHsgGSv8cMuqOYo6tuAAYp69Hc0kxB7DB01bcwCh1abHGWRwAjNHNacn9Wd99uSQhgUmsYgRj1NokiOXTSB4A43VnanlwA/bmJT0HpvSmUsMwLldfmzYwqZcsAMbrHanNnobtZtJ5uY61BGZRwfGMVB9btwxokBwAvJM7cW3ulBRzZTq+EpiH4tikThiTAYD35UswRHny00HtPCron4QmiA+Aa3UnmvFMWe2nM/N5vchycDQjlcQuOpd4APCs/X+WDT5n+cdtOJVVHBFndxAPANVarP3yVi/uNMZrL+Fnw11JuAOg7ORxlXny7WI4i9wAUHbvJj+J8Sk6uY3tAeAd7LwRn98yhcQloOlle4BkD4Bq/Vb5VC/xqUuK4Awyah8bYnYASPg8f+s20G97OHhr6N4eOrb2/issP9XAwuWwcAW8/w08Ng+en28zzHh1+2wLW21an8bspTB9QTy6Jq332wJO3xV6bQHbt4ONm9VvtXglvLMIJs2B+z4ALOMJQgGgtT4cGAp80O02ls5dxgMmTIfVGbADnNQDDt0GtmoDzewgmCWtNSz7yQPBzTPghQQvZ7VpAWfvAUO7QbfNoV3LYB6Xr4Z3F8OtM+Evcj8owXLW7nDRvtC9g5mMRCZf/gB/mgnjXmGwaWRRoPi11n2AicA2IvPPvmfNRc/SYvJH9qMUoVYe6E18lzagHCY9qNfVNfDSF/CfL8Nr/2/PW67FAVvCZftD/+2h9UZ2dET4MxfBJc/HB6Noxdv7Q9/toHmFHR9Se20tvPAFK3Zoy1Y7bq7kplJoCQPAlcBoYOMchUUrofJFuOvdKLLe7zLxVx8Mp+4KHVqZtXGtJegX3u61/BKFx2sPhdN2hc3WjdSNC1v5FPYiILy1H+zeMd5HIoCcvZTPurdnd6XUD2GjCQPANcAooEU+gaWr4PKXPLUXVkYdABfvB78s1j1dn85Necs1PbwL3NwXerSPJ/B8VlxB0KMD3D/Im/wkSo2GBcuZvE1bFXq7KgwA5wPVwCaFDMn6K1+bHwgExeMOh0O2Tk6oNgL56FsY8jB88E14q9/sDlWHFQegYheMeCyah3wOHxsKx+6YrMyWr2H1phtxulIq0HYLA8B+K9fyeOvmdPITpYDgqpfhj7IprCvyxctaX2x1Hza1tdozyM4IuZt77l7e5LeLqfKD+BAe7v8QTnncDLqZA+DK3tCquVl9m1pf/sD0bdqqXkFtQs2xJ+bpRQN2oGOQ0fbDag8A416Dm46EU3pCi4Jtig2zSdX97Dv41WT/bZqo2kdPgJ1/kVRv/nRkOfq3KfDAh+H9iA3y/AjYNyhnSUw2f1jN2jYtslrgPj9SwQCo0kNP6skkWSN/0TKYC1lrZC/aqXWy6ivOuFesgcwL3haxsEwcCKf2hIoEdyJ+vIohJpN/UoQWOG8vb8nctJ6lFT56ob1yrTeGKK0h2mjWYqbs2UnJjesGJVgM1fplOeZ99kQ4UrLsNKEiArrjHfhdwWVssU8eGAzbtk1nMPO/hxMnh29P7xwAZ+5m/vHkLy+yZfzzQDiiS3j72UtY3r2DamMOAO9+fjbdyYnd4U9Hw+YhWiCuOL/7CWZ8Dc98Cq8vqO/lE4fMyT1AHEgtLdZI8RYOLriELevs6AMbetPi8h/U/se1MGYqjH89uIe3zoC9fa2s4KXl3Kfhwdne7yKXu4+BTg1M9fXtFyyHB+cw+sJ9ldzHrFf8NUC1fhg4PldTUHZyTzOPlKkwc56r29+BCW+C2BNhRfbqYmSaguC5+XBUge0r6l/cqkFFeJqzFG6c7mkQsReu6g1Ddna3bf78XrBBKm7evw+G7TYzlRp89QOc9kT9j0RsCNECQUWWxJve5N0rDlJ7RAPAC+6sw5dXPek9qnzx97zn+ROiJj7HsBhLr54KPTuYCcsPAGHLmXgUxYl00XMNebr3OBjR3c1ueOUr6H2vP89yxnDPQM8lblr8APC/A0Bcx0FFxnbdG3DFy+xSGEzaUANUa1ETmUJiSSwF8oV9uAQufh6e/tR0yOvr2dgjUz6Ffn+v30dQe3HeiKr+nwDnlomaDRqN+CN63llcAPzhULisV7iWuvNd+O2TVJNRlfnc+AFgUVBCpkdO8NShS5HJn/oVyPoV5aQJoj/tFDhoq+jeg4zABwbBr7uvby/13ljgffVR5whRajaIK3FRn/QYvPxlwxouGkAOoC58rr47/ppDYNT+4QD424dw4mMsJqN+GQwALxWbb9oS2zW4cLjf/OgxLWuiCwDkZGzMwWb++qBt4PFd4cY+0L4VCD+yTat61WwZuq2fd0poe5Dlp7JzsnEBgOwCRFOdL3HYdcUEAHlL4rH5Kezqa4BqfTdk07LVK0mo/xxB+eq+/Qk+/jZ7YMHMr+Hz70FUdqE9kIsXkP4lZsDUABRDbtBDMHdptLYwrWEiZD9aYQCQ+u+f5dlYNkVkdth96+VlwlseACaSUWfm+isEwDKgnk3adXPPUt2jnuKwYTfdumLwjHsdrhQvRoLFdQsZ5pUU9kyXtfyhyPbymmlQ/Zr3r1YAUCxjlFrnB10PAC/96pOFMhNHxem7JbsFTHBe6pES7SJIP+ERM7Vuw4d4D8UfIrsRmxJmBAqdqK1pUF9iW5zzFDz5iSUAhGAFA/Rl2UO+w9cDoFrfBNkcfetKkqrfRmiudWWHcd6U+EEZfv3L6eGEI+1ctkInCgAj9/dsmyiXrh9PcvJ54bOeYR5ln+SWAAnBu+sYlmy5KZtTz6Sp1u8BPXMdCdKfHA69t3adjnTbFXPyTdWs34j9/BH59eK6p8WnIiA7MGJ39PBcWFMDg3eub0t5GkBSrkO9MEtBpWwtTA2vwjVK1uK2LeytZlvYZEOgPve2Ri67C9P+TPbafrTqtl+h3fxjGAzc0ZQTt3qye/A7APMAMF6PoJZ1x4Vi+EmAggRF2hY5HZRAEdmmSAyguF7F5Sln77ZbqLC+Zb2ft8w7ihYnR7FLlLfNr3+/LZtfPZFT1KlrscbnAaAg3PuGPvDv+8BGDkGJQRE5sucd3s2LBu7SFjbZyA0QuUjcibM8f31a5elfwdHb2/VmchiUo/i3wZ58kvxITLjNLQHTgIOkQZyvf00t/PdbXnRsVJG9r8S6i3bYYhMv5l1UVHMFW2wK366C5WtAvqJPl3kuZFlP07wPkD+Gd38Du1nG64mL+bdPwuPzoqQBYgvcNwi2tzgYiqYaXSMHgBW5Z1aqD4OLeyX79UezUdo1JL5RJkccUzZl9hLodY/5lrTYoWo+vC9TeA8sZR80EMv/xZNgL4vz6RzR/LXfRkhNoa7rFtAvJiFqvAICcbsXM/5CeFi1Fhat5FZFtT4OyOanrawLTnSx/E2iX6IGX6q/X38EXLiv3UUN2Z1InMOlkj7DskhspQSt2moc025k6/hf0+HqaQxSVOn/QHGjNLY5bs3vzDT+zZTBUqs3eSgMssx+JEIWp1T2vp5Dkcm/7gjPyePyQfp1mbvBNPrFuuN4zcWiAbIewDhn3t//5O3DxTLf0Iosi2+cBrvIi4MWJeoMwJSUXF45f284ajuzk1A/urI8ywHS7W832DlNEABMkgugsg/9/V5uUS+Fp1Omg2sK9Ybv4l3Xsl2T//k59JFcqQkW8ReIJ09uD225KWzSwuyMRk5ZJUTd5wLrQ7IETG2zMb1djT9TZ0eCckiVlMlJWyFDacrEJE5B7ijkB5Ku41czTTTAh8N3YRcXlAuhQOKpTlPxOiuMIjLpKexegkl7mzomDqqQmITZAoAFN/els6v6l4QNB/7FfK9rM7jGrmsbiJrjNywMLOkxmTio5n0LAyf5BsgsFABol6CE3EBMDjuSHnRa9I7bCeQMwPaGc1gkcJK8mzqowo6kVZ/7tbYNTc4NQlK3jH3Vi07ZEItLFFBQQGox5CNG4S1HR+8Owo6k1flTtK4+3DucsS02vm5b2qVQv9TXf9Mj6jAtrW6bqXVUNEnQZNj6ukthUk15cF3/o4JATfs3qWcC0CiNpJ6fr3XYtaIwRqKiXUwGUap1XNd/ueO4j2RWSqGYGIBRQbLqo6Va7+R4V77utkkKQ02/C5f9v3CZllFsCtAQJ1BWqGrxSl3ToRXWoR/r7pu9lP7kpNGjiXot5CNNo9gUoBFL0kK1co2uadXcHgA20S5pTFiSfbiu/2k6xUwPqCLstNlq9Vpdu1EzrPNlRKmWJCckbVqu/v+0jGKJ2npiGJgs3aF2mriCtRY70b6kiXZ77uK1MFWvhb343UiOx4l/azkdNNm6R+0AgIecAZDmdqcYQgyjaape82mkeQBkap8YLNMTygAoQILr+X9aB0A2F0kiHXUSEOK6BGyoGsB1/Zc8PKc/Ac98Vlx9ZRO2N2sx7H5XKD+DygAokI9L/J+QiLoDmAQsbK/rRfokaulWBkDBzLis/0IiDa+oTU5Bg/V/JRm1iTMANsRdgOv6LwBIwyv60sleDmaTYhCT+AoZ1dsZABuiH8B1/U/DK3rBPjD2MPNT28g7CXUvizgDIE23pwnic3VyL35I6lWJfTdNQyftXc7/pZ2BurUZQoO6tvmEjXYkFZzESHW/MwDS3PeaSk/uG0rWzP06gwBUAlWq6tKomNAw3V8X0iq2NrS9rGuYI2lbMupzZwCIENLyfJlMnl8yy0g1WEDYNm1rrnkxASCZzSRg1zQsTbx/d8+Csxok+8kbrOYDKlU2GUgsAIQEG5rMWWJ1REU+fLyX1Dr/erWNZe6StrXYAHDJ0Cq3qiU3Q8SNpAlk1EWxAVAqN4KCchnb7M1dDUARYjE0QBCoo74aSUh56F8jalUwgJEqmwxcNMBPhe8CRXWS+70U7gSGJbA08IStG6prFrBiAcAlQbcYf3LvL/8VF5+5/I6Mapf7dwHAEshmjHIqjXkrWK6zSZLkoMuTNktAHAAkvSOS1HGSIt/22TjDK3r1E0VqreUlQMu7r+uxIrsBuXT4+ylO+HFqJOpR8heKgRQmpLBU7YUdxwFAUjKQcckuZkhXszt/+WOQ+/6Gu576qWK11pJV/9dOM1HXyPR9nDh95NpKnjvJ9ytPzYbl04kKhkwSAELL9LWyIBmYjiuo/ZsLvcuoEX6PhsmitdbnAeOAgtdx7abL5ak0mx5s78t/vQLO/D8vk6ZJkZc6Zd2V/EQuxTVLqYxLXg2TpBCuD1carv0yrIbp4rXWXesyhHRzGXh+GzG6JH1pVOp1m35ELUp2DslaZroXFvpG1nAeIzZhVkH8N0jAEDJQ2eLJCyhy3TvOM3vSpxxBF76N4Nu1CngwQmstD0ReDDjcD6rflQQhyJMrkr8vTpEvQ9KoSn7/jq3s0qdZfBH1WIxzRzKfkCRkkHiJtxbCghXe/3dsB9u09bKAyZN1HVrbr/N+8szPGRwh70fIqBMK62SDQbXWPYBHAcfnIOqTrXu7Nvs2wC0zIteldY3lqxBjTLKVyBrv+gahjfWfz7ntC15xAJ5EWzH8JDO6vHZiUPqTUQXvqLE+GlhrLc/EyIPRiT7zLFsk+Ro+WOLl/pOy9EfYvK4XeZNwh828d3OSSC0rGkiSITwy10AkBVVsztvtqSfbQrTMX9/3opAMylQy6hC/evXCwbXWgpC+4iAyIFpyVeSLkOVHHqNyKa73AVz6itPG2uDUDKNSFTyi53FQCABZCiSzTcgbVHFYL15byy8ikBHbk7fijcifsvXkQ+DX3wAA8g9a6wHA7YBh7EnaImjYn0z+U594L3bbnP/7cZ7W28IuUstZ/MMetRhnBccxUvm+A+ULgDoQnFLnG9jShdE020hCRlnv5fgz7uTn+LaNvkljvGHvGob0P5mMGhLGX9jz8YOB6+O4iYstmNzr5Vc4rvlh/LkcxhRrvGI8y/tAYU/Q+vat2ZtKFfAaoo8NUEikbnt4C3BoKRmGogrfWey9EO7yAKXpRLkeypjSj6onS9uLn3tGrYNzbTwZNSqqDyNrv0brzLc/8of2rWgWRbDYv8s2TyJwTd/7i8uPpGGRu3iublqX/gXgn3znjdHxMYy5rKI7Y1RtVP9GABAixzygzxyxK3eJ69L25awoJkx+l4ce7//AU4Pi/UqzyEGNROTK03nNjCVmz6F88XOWwF2z4IY37Nuva1HLYEarbALwqGI3nCo9Yeu2XCAuWkliLO7aYr5wIQaeBDhKilMbj2LUoF1/Fy+lnEkIEFy9lIV959zGL33hfe3y/lGsUhfubUrDDgBCtVq/Bewtf4rLdmg371VPeQJ945gLhKg+MezkaFUOOGTii/kQlKmQCuvJVlFeE5dncORdpXYtzTSDjE9CyBeugE+WebeJJHA1wTHOIKP2sRmXPQCq9H4ofBWUCGT/LWDXjt7hR6uNoFNraO1zxCTp1CWOQOIKJbj0nUUw5bNEhWEjh9h1ZexbhRwlyzO50xfE7iacgKYXlWq6TS/2APC0wNl1ziKbvsp1iyuBc8ioO2y7cAOA9DJOX4/mEtsOy/WLIAHFDYxSl7pQdgeApwkeBIa5dFxuk5gEJpFRw12pxQPAGN2clsirOAe7MlBuF0sCU1nFEYxRa12pxAOA9Dped6YWiQnezZWJcjsnCcyihr5crr52al3XKD4APBDsSC1y08Q5vDzOIH6GbedRQX9Gqo/jjj0ZAHhGYTc0cuxYBkHcWQlvPw/FsYxS2bce45bkALBeEzxSXg7iTktg+1lUcHwSX36uh2QBIFSv1Z1ohrxEVjYMk8XBVCoYzki1MEmyyQNAuPN2BxJaVt4iJjNbk1jFiDjWfhAbxQFArreysyj+9Mdw8ph0XlwACAdlt7HJPATVcXLv2nRYfAAIN94B0q25U0QbBn+mdWegOdf2YMdFVukAIMdZlZ6A4gIXRn82bSzP8+PKJV0ACLdj9SAquA6QS6nlsl4Cc6nlMtNInqQElz4AvF1CBS2pAkYmNZAmTmc8q6g0ieFLepyNA4D1S8JeKK4CJAT951gmo7k6KnS7mIJpXADkRjZeH0stEsL883AeaabRjOqwGzvFnPR82qUBgPUaYSgKyV+3oQJhKooJjFLiKS2JUloAyImkWvcDfgccXxJSis+E5F641e9+fnzS8SiUJgByY/JOGM8AzgI6xhtq6q0XSxZ5FBOTOrkrxghKGwD5I67WA+vOFkQrbFYMYcSmqViGzmZakTAts9QNsTuNR6DpACB/nON1f2rpDxwFZJMeN1qRxMuKZ6jgqVz61UbjxaHjpgmA+pqhCxX0poYDUOwL7Am0dpCFSZOVwNto3qQZr1HLNEm5btKwVOs0fQD4SXas7koFYj/shGLbbLILTWcU7QHJk9s5YELkrF3U+BIU8veXaOajmEctcxitHDIPlerUe3z9C9dQrerqRI+KAAAAAElFTkSuQmCC">
+</head>
+<body id="main" class="main1" >
+  <div id="mySidebar3" class="sidebar3">
+    <div id="sb" style="display:flex; justify-content: center;
+    overflow:hidden;" class="activity3"><a id="sb" href="javascript:void(0)" id="close1" class="closebtn3" onclick="closeNav3()">×</a>
+      <a id="sb" href="#maincontent" onclick="closeNav3()" class="act sidebartext">About Me</a>
+      <a id="sb" href="#cv" onclick="closeNav3()" class="act sidebartext">CV</a>
+      <a id="sb" href="#exp" onclick="closeNav3()" class="act sidebartext">Experience</a>
+      <a id="sb" href="#act" onclick="closeNav3()" class="act sidebartext">Activity</a>
+      <a id="sb" href="#contact" onclick="closeNav3()" class="act sidebartext">Contact Me</a></div>
+        <div class="caro text" style="height:720px; margin-bottom:50px;" id="sb">
+          <div id="sb"><button id="sb" class="nextprev" style="float:left;margin-top:30%;margin-left: -20px; position:relative;"onclick="nextNav32()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-left.png"/></button></div>
+          <div id="sb"><button id="sb" class="nextprev" style="float:right;margin-top:30%;margin-right:-20px; position:relative;"onclick="nextNav31()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-right.png"/></button></div>
+                 <h5 class="tittle" style="padding-top: 55px; padding-left:50px" id= "sb">3. PROGRAMMING IN VIRTUAL REALITY<a class="down1" target="_blank" href="attachments/vr.pdf" download id="sb" style="font-size: 14px;margin-right:35px; float:right;margin-top:-30px; padding:10px; border: 2px solid white;">Download Full Report</a></h5><p style="padding-left:55px; padding-right: 55px;" id="sb"><br id="sb">As virtual reality becomes evermore prominent in the modern day, I aimed to investigate its exciting limits and prove just what is and may be possible as VR continues to grow. Incorporating mathematics into the project, one of my goals was to create an apparent four-dimensional Klein Bottle in virtual reality, using Unity 3D, Steam VR and the HTC Vive to make this possible. <br id="sb"><br id="sb">Initially the main objective for the project was to model and create a Klein Bottle, where it could be visualised in virtual reality. I had hoped that it would be possible to use a method of movement to walk over the surface. The surface would be modelled using an external program outside of Unity, called Blender and then reimported. One of the main appeals of VR is the movement around seemingly large spaces, and so I would also aim to implement different modes of movement, such as touch-pad walking and controller teleportation over the three-dimensional representation of the 4D object.<br id="sb"><br id="sb"> A Klein Bottle is defined as a non-orientable surface that is closed, this means it technically has no inside or outside. An idea is that walking on a Klein Bottle means that you will always travel the length of it and never encounter a boundary. It was first theorised by Felix Klein in 1882, whereby two Mobius strips could be glued together. A Mobius strip is a surface with only one edge and one continuous length, like a Klein Bottle this surface is non-orientable but some versions of this band can be modelled in Euclidean space. <br id="sb"><br id="sb">Although a 4D version could not be created as Unity did not support morphing of the object over time, the project concluded with a presentation to staff and students at the University of Exeter. The finished product included seamless teleportation mechanics and a 3D Klein Bottle.
+
+
+
+</p>
+        </div>
+</div>
+  <div id="mySidebar2" class="sidebar2" style="overflow: scroll;">
+
+    <div id="sb" style="display:flex; justify-content: center;
+    overflow:hidden;" class="activity2"><a id="sb" href="javascript:void(0)" id="close1" class="closebtn2" onclick="closeNav2()">×</a>
+      <a id="sb" href="#maincontent" onclick="closeNav2()" class="act sidebartext">About Me</a>
+      <a id="sb" href="#cv" onclick="closeNav2()" class="act sidebartext">CV</a>
+      <a id="sb" href="#exp" onclick="closeNav2()" class="act sidebartext">Experience</a>
+      <a id="sb" href="#act" onclick="closeNav2()" class="act sidebartext">Activity</a>
+      <a id="sb" href="#contact" onclick="closeNav2()" class="act sidebartext">Contact Me</a></div>
+        <div class="caro text" style="height:860px; margin-bottom:50px;" id="sb">
+          <div id="sb"><button id="sb" class="nextprev" style="float:left;margin-top:30%;margin-left: -20px; position:relative;" onclick="nextNav21()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-left.png"/></button></div>
+          <div id="sb"><button id="sb" class="nextprev" style="float:right;margin-top:30%;margin-right:-20px; position:relative;" onclick="nextNav23()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-right.png"/></button></div>
+                 <h5 class="tittle" style="padding-top: 55px; padding-left:50px" id= "sb">2. MODELLING THE DYNAMICAL MOTION OF SPACE DEBRIS<a class="down1" target="_blank" href="attachments/debris.pdf" download id="sb" style="font-size: 14px;margin-right:35px; float:right;margin-top:-30px; padding:10px; border: 2px solid white;">Download Full Report</a></h5><p style="padding-left:55px; padding-right: 55px;" id="sb"><br id="sb">Space debris is an ever-increasing issue which poses a huge threat towards space exploration in the future. With space venturing becoming more routine, if something is not done this problem will only intensify. In this project, I began to explore the possible damage caused as a result of the debris; moving onto a few methods that reduce the quantity of debris and protect spacecrafts in orbit from these detrimental effects. The main research in this project is aimed towards modelling the motion of a spacecraft in relation to debris in an orbit above the Earth with the ultimate goal to optimise the distance between the two orbital objects and clean the debris by dragging it further towards the atmosphere. As a matter of fact, I simulated this given a few initial conditions, allowing us to numerically solve the system using the Runge-Kutta 4th order method. Finally, after minimising the distance, we expand on the interactions at a molecular level, occurring between the debris and the atmosphere as it falls back down to Earth. <br id="sb"><br id="sb">Within a geosynchronous orbit around the Earth, it is estimated that hundreds of millions of
+debris pieces already exist. Naturally we can categorise debris according to size, however from
+Earth it’s nearly impossible to track debris of only a few inches wide. Man-made debris can arise
+from almost anything on a spacecraft, this can include launch canisters or even flakes of dust
+and paint from the body; whilst natural debris occurs in our orbit due to meteors and asteroids. Space debris has caused much concern recently due to the amount of damage it can inflict,
+which we shall now explore in more detail.<br id="sb"><br id="sb">The main issue with space debris is the damage caused to active spacecrafts, particularly to the
+manned crafts as this poses a direct threat to human life. Even relatively small debris, which cannot be remotely tracked, can pierce the shell of a spacecraft; often destroying the craft,
+which in turn becomes debris itself. If something is not done to prevent the creation of debris,
+its quantity will increase exponentially, this is known as Kessler Syndrome.<br id="sb"><br id="sb">On the other hand, many pieces of debris are within a geosynchronous orbit (this type of orbit
+is defined to have the same orbital period as the celestial object) and may fall back into the
+Earth’s atmosphere, despite much of the debris burning up as it enters the atmosphere. This
+might present a huge impact should the quantity of debris continue to increase and if one of the
+many fragments should strike land.
+</p>
+        </div>
+</div>
+  <div id="mySidebar1" class="sidebar1">
+
+    <div id="sb" style="display:flex; justify-content: center;
+    overflow:hidden;" class="activity"><a id="sb" href="javascript:void(0)" id="close1" class="closebtn1" onclick="closeNav1()">×</a>
+      <a id="sb" href="#maincontent" onclick="closeNav1()" class="act sidebartext">About Me</a>
+      <a id="sb" href="#cv" onclick="closeNav1()" class="act sidebartext">CV</a>
+      <a id="sb" href="#exp" onclick="closeNav1()" class="act sidebartext">Experience</a>
+      <a id="sb" href="#act" onclick="closeNav1()" class="act sidebartext">Activity</a>
+      <a id="sb" href="#contact" onclick="closeNav1()" class="act sidebartext">Contact Me</a></div>
+        <div class="caro text" style="height:820px; margin-bottom:50px;" id="sb">
+          <div id="sb"><button id="sb" class="nextprev" style="float:left;margin-top:30%;margin-left: -20px; position:relative;" onclick="nextNav13()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-left.png"/></button></div>
+          <div id="sb"><button id="sb" class="nextprev" style="float:right;margin-top:30%;margin-right:-20px; position:relative;" onclick="nextNav12()"><img id="sb" style="width:40px;"src="https://img.icons8.com/ios/452/chevron-right.png"/></button></div>
+                   <h5 class="tittle" style="padding-top: 55px; padding-left:50px" id= "sb">1. MODELLING THE BEHAVIOUR OF LIGHTNING<a class="down1"  target="_blank" href="attachments/light.pdf" download id="sb" style="font-size: 14px;margin-right:35px; float:right;margin-top:-30px; padding:10px; border: 2px solid white;">Download Full Report</a></h5><p style="padding-left:55px; padding-right: 55px;" id="sb"><br id="sb">Lightning and thunder clouds form an integral part of the climate in many areas across the world, becoming more prevalent due to an increasing rate in global warming. They produce numerous detrimental effects to civilisation, particularly in poorer regions without the capabilities to provide necessary protection to inhabitants. In this essay I aimed to model the behaviour of lightning using computer simulations, numerical analysis and mathematical formulae; with the ultimate goal to prevent and mitigate effects of such lightning strikes. I use various packages included in Python 3.7 to model a system, which I can use to investigate how a lightning channel permeates through a medium of air, as well as the interaction of lightning with positively charged objects.<br id="sb"><br id="sb"> Lightning is a natural phenomenon that can occur almost anywhere in the world. It is an
+           electrostatic discharge which is caused by a potential difference between a cloud and another
+           surface. In this report we will aim to model and study the effects of a particular type of lightning,
+           known as CG lightning or forked lightning, this is where a potential difference is induced between
+           the clouds and the earth. As a side note, there are other types of lightning, for example between
+           two clouds, however our focus will remain on forked lightning.<br id="sb"><br id="sb">One of the most crucial conditions for lightning to form is the humidity of the air and temperature
+           of the ground. The temperature needs to be relatively hot as this causes warm air to rise
+           and contributes to the development of the cloud. At the top of the cloud, positive charges
+           begin to build up due to a huge temperature difference between the top of the cloud and the
+           bottom. At the same time ice crystals begin to form, an electrostatic repulsion strengthens as a
+           result of collisions and friction between these ice crystals. Now there is an increasing potential
+           difference within the cloud as negative charges fall rapidly, once this difference in potential
+           becomes sufficiently large, static electricity starts to form. Since the charge at the bottom of the cloud is overwhelmingly negative, a potential difference is directly set up between the cloud
+           and the ground, which hence, must be positively charged. Lightning formed in this way is
+           negatively charged as there is a net transfer of negative charge towards the ground, and therefore
+           attracted to the closest positive charge on the surface.</p>
+
+        </div>
+</div>
+
+
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" id="close" class="closebtn" onclick="closeNav()">×</a>
+    <a href="#maincontent" onclick="closeNav()" class="sidebartext">About Me</a>
+    <a href="#cv" onclick="closeNav()" class="sidebartext">CV</a>
+    <a href="#exp" onclick="closeNav()" class="sidebartext">Experience</a>
+    <a href="#act" onclick="closeNav()" class="sidebartext">Activity</a>
+    <a href="#contact" onclick="closeNav()" class="sidebartext">Contact Me</a>
+    <ul class="latest-post">
+      <li><h5 class="tittle" style="color:white; border: none;">Latest Posts</h5></li>
+      <!-- Post Small -->
+      <li>
+        <div class="media" onclick="openNav1()">
+          <div class="media-left"><img src="images/rod.png" alt=""></div>
+          <div class="media-body1">Modelling the Behaviour of Lightning
+            <br><p class="font-crimson font-italic">Mathematical Modelling</p>
+          </div>
+        </div>
+      </li>
+      <!-- Post Small -->
+      <li>
+        <div class="media" onclick="openNav2()">
+          <div class="media-left"><img src="images/debris.jpg" alt=""></div>
+          <div class="media-body1"> Modelling the Dynamical Motion of Space Debris
+            <br><p class="font-crimson font-italic">Mathematical Modelling</p>
+          </div>
+        </div>
+      </li>
+
+      <!-- Post Small -->
+      <li>
+        <div class="media" onclick="openNav3()">
+          <div class="media-left"><img src="images/vr.png" alt=""></div>
+          <div class="media-body1">Programming in Virtual Reality
+            <br><p class="font-crimson font-italic">Coding / Unity</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+<section id="home">
+    <div class="slide-wrapper" style= "background: rgba(105, 79, 156,0.6); width:100%;">
+        <div class="smallcircles">
+          <div class="big-circles">
+            <div class="big-circle"></div>
+            <div class="big-circle"></div>
+            <div class="big-circle"></div>
+            <div class="big-circle"></div>
+        </div>
+            <div class="small-circle"></div>
+            <div class="small-circle"></div>
+            <div class="small-circle"></div>
+            <div class="small-circle"></div>
+            <div class="triangle" style="  display:block;
+              top: 18%;
+              left: 54%;  width: 150px;
+                height: 150px;border-left: 200px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 200px solid #392aad;"></div>
+                <div class="triangle" style="  display:block;
+                  top: 44%;
+                  left: 24%;  width: 150px;
+                    height: 150px;"></div>
+            <div class="square" style="  display:block;
+              top: 18%;
+              left: 14%;  width: 150px;
+                height: 150px;"></div>
+            <div class="square" style="  display:block;
+              top: 65%;
+              left: 44%;"></div>
+        </div>
+        <div class="cover-wrapper text-center" id="home-content">
+            <div class="cover-wrapper__inner">
+                <div class="cover-wrapper__container">
+                    <h1 class="fade-in wtitle" style="margin-bottom: 50px;width:500px;">Alex Rowan-Smith</h1>
+                    <div class="arrow1 fade-in" id="intro">
+                      <a href="#maincontent" class="smooth arrow1"><i class="arrow down smooth"></i></a>
+                    </div>
+                    <div class="attach fade-in" style="margin-top:10px;z-index:10">
+                                <div class="attach bor-btm padding-25">
+                                  <ul>
+                                    <li class="blank">
+                                      <a href="attachments/CURRICULUM-VITAE2020.pdf" style="text-decoration:none; color: white;"><p><img src="images/pdf-icon.jpg" alt="" style="width: 16px; margin-right:5px;"> Curriculum-Vitae.pdf </p></a>
+                                    </li>
+                                    <li></li>
+                                    <li class="blank">
+                                      <a href="attachments/CURRICULUM-VITAE2020.docx" download="cvalexrowansmith.docx" style="text-decoration:none; color: white;"><p><img src="images/word-icon.jpg" alt="" style="width: 16px; margin-right:5px;"> Curriculum-Vitae.docx</p></a>
+                                    </li>
+                                    <li></li>
+                                    <li class="blank">
+                                      <a href="attachments/Personal-Statement.docx" style="text-decoration:none; color: white;"><p><img src="images/word-icon.jpg" alt="" style="width: 16px; margin-right:5px;"> Personal-Statement.docx </p></a>
+                                    </li>
+                                  </ul>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+  <div style="margin-bottom:700px;"></div>
+  <div id="welcometext" class="wtitle">Welcome.</div>
+  <div id="maincontent" style="margin-bottom:50px; text-align:center;color:none;font-size:0px margin-bottom: 100px;">-</div>
+  <div class="arrow2">
+    <a href="#" class="smooth arrow1"><i class="arrow up smooth"></i></a>
+  </div>
+  <div id="btn"><button id="button" class="openbtn blank" style="border: 2px solid white;"onclick="openNav(); ">☰</button></div>
+  <nav class="nav" id="nav1">
+    <ul class="nav2">
+      <li class="blank"><a href="#maincontent">About Me</a></li>
+      <li></li>
+      <li class="blank"><a href="#cv">CV</a></li>
+      <li></li>
+      <li class="blank"><a href="#exp">Experience</a></li>
+      <li></li>
+      <li class="blank"><a href="#act">Activity</a></li>
+      <li></li>
+      <li class="blank"><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <div id="btn"><button id="button" class="openbtn1 blank" style="border: 2px solid white;"onclick="openNav1(); ">☰</button></div>
+  <div class="title" id="aboutme">About Me.</div>
+  <div class="text" style="border-radius: 14px 14px 0 0;"><h5 class="tittle"> Introduction </h5>I am a highly motivated second-year mathematics student at Durham University on course for a first. Throughout my time here I have found a passion for analytics as well as mathematical modelling, both of which I would love to pursue further in the future. Due to my achievements in hockey and other sports I have become very accustom to working proficiently as part of a team. My experiences show that I have developed confident presentation skills alongside strong customer-relations.</div>
+  <div class="text"><h5 class="tittle"> Interests </h5>Competed for Ashmoor Hockey Club, representing the West of England at the national indoor hockey finals from 2015 to 2017.<br>
+Accredited as an EHB Foundation Umpire.<br>
+
+BCU Star Award I Certificate in Kayaking.<br>
+
+Obtained Rookie Lifeguard Gold I and Life Support Awards.<br>
+
+Partaking in online education courses, such as Ethical Hacking.</div>
+<div class="text" style="border-radius:0 0 14px 14px;"><h5 class="tittle"> Skills </h5>
+  <button class="accordion">Python<div class="progress">
+	<div class="progress-done" data-done="80">
+		80%
+	</div>
+</div></button>
+  <div class="panel">
+    <p>Having been using Python for various projects over the past six years, I have become very accustom to the language and it's complementing modules and packages. Most of the projects you can find here will have been coded in Python 3.7.</p>
+  </div>
+
+  <button class="accordion">LaTeX<div class="progress">
+	<div class="progress-done1" data-done1="90">
+		90%
+	</div>
+</div></button>
+  <div class="panel">
+    <p>I have been writing documents in Latex for over five years. In that time I have become proficient in generating and styling professional documents. Each full report found on the right-hand tab was made using Latex.</p>
+  </div>
+
+  <button class="accordion">Communication Skills<div class="progress">
+	<div class="progress-done2" data-done2="75">
+		75%
+	</div>
+</div></button>
+  <div class="panel">
+    <p>I am very experienced with communicating, whether to customers or as a presentation. Having worked at a company primarily based on customer interactions, I have been able to really develop my interpersonal skills.
+
+</p>
+  </div>
+  <button class="accordion">JavaScript<div class="progress">
+	<div class="progress-done3" data-done3="55">
+		55%
+	</div>
+</div></button>
+  <div class="panel">
+    <p>Despite being relatively new to JavaScript, implementing scripts into HTML, and in fact aspects of this website, has been fascinating.</p>
+  </div>
+  <button class="accordion">HTML / CSS3<div class="progress">
+	<div class="progress-done4" data-done4="90">
+		90%
+	</div>
+</div></button>
+  <div class="panel">
+    <p>Web development has been an interest of mine for a long time, where my curiosity inspires me to delve deeper. This website was made from a blank document with the aim not to simply copy, but instead to understand each element I wanted to implement.</p>
+  </div>
+
+</div>
+</div>
+<div id="cv" style="margin-bottom:0px; text-align:center;color:none;font-size:0px margin-bottom: 100px;">-</div>
+<div class="arrow2">
+  <a href="#" class="smooth arrow1"><i class="arrow up smooth"></i></a>
+</div>
+  <div class="title" style="width:82px; margin-top:60px;">CV.</div>
+  <div class="text" style="border-radius: 14px 14px 0 0;"><h5 class="tittle"> Work Experience </h5>
+    <div class="media-left"> <span class="sun">Jun 2015 - Sep 2018</span><div class="company-logo"> <br><img src="images/coop.png" style="width:139px; margin-left: -34px; padding-left:80px; padding-top:20px;" alt="" > </div></div>
+    <div class="media-body">
+
+      <!-- COmpany Logo -->
+      <h6>The Co-Operative Food</h6>
+      <p>Customer Team Member</p>
+      <p>Newton Abbot, Devon</p>
+      <p class="margin-top-10"> Working since the age of 16 has dramatically improved my confidence and interpersonal skills. Dealing with members often proved tricky but was <span id="dots">...</span><span id="more">absolutely necessary in this job. I also handled with customer complaints and refunds. During my time there I created relationships with customers and recieved praise for my helpful service. </span></p>
+      <button onclick="myFunction()" id="myBtn">Read more</button>
+    </div>
+  </div>
+  <div class="text" style="border-radius: 0 0 14px 14px;"><h5 class="tittle"> Education </h5>
+
+      <div class="media-left"> <span class="sun">Sep 2010 - Jun 2015</span><div class="company-logo"> <img src="images/sdcc.jpg" style="width:150px; margin-left: -39px; padding-left:80px; padding-top:20px;" alt="" > </div></div>
+      <div class="media-body" style="padding-bottom: 5px;">
+        <!-- COmpany Logo -->
+        <h6>South Dartmoor Community College</h6>
+        <p>Newton Abbot, DEVON</p>
+        <p>GCSE</p>
+        <p class="margin-top-10"> 12 GCSEs all A*-C available on request, including Maths and Geography at A* and Physics, Chemistry and Biology at A.</span></p>
+      </div>
+      <br>
+      <div class="media-left"> <span class="sun">Aug 2015 - Jun 2017</span><div class="company-logo"> <img src="images/ems.jpeg" style="width:150px; margin-left: -39px; padding-left:80px; padding-top:20px;" alt="" > </div></div>
+      <div class="media-body">
+        <!-- COmpany Logo -->
+        <h6>Exeter Mathematics School</h6>
+        <p>Exeter, DEVON</p>
+        <p>A-Level</p>
+        <p class="margin-top-10"> Obtained A*AA in Further Mathematics, Physics and Mathematics respectively. I also undertook a group of projects, collectively <span id="dots2">...</span><span id="more2">known as the Exeter Mathematics Certificate with further details under the <a href="#exp">Experience</a> tab; this envolved both presentations and project work for companies.</span></p>
+        <button onclick="myFunction2()" id="myBtn2">Read more</button>
+      </div>
+      <br>
+      <div class="media-left"> <span class="sun">Sep 2017 - Current</span><div class="company-logo"> <img src="images/due.jpg" style="width:160px; margin-left: -45px;padding-left:80px; padding-top:20px;" alt="" > </div></div>
+      <div class="media-body">
+        <!-- COmpany Logo -->
+        <h6>Durham University</h6>
+        <p>Durham, DURHAM</p>
+        <p>MMath Mathematics</p>
+        <p class="margin-top-10"> Average of 66% in first year. In my second year, I have particularly enjoyed mathematical modelling and complex <span id="dots3">...</span><span id="more3">analysis. I also play hockey as part  of the university. As part of mathematical modelling I produced two projects which can be found under the <a href="activity.html">Activity</a> tab. </span></p>
+        <button onclick="myFunction3()" id="myBtn3">Read more</button>
+      </div>
+
+  </div>
+  <div id="exp" style="margin-bottom:0px; text-align:center;color:none;font-size:0px margin-bottom: 100px;">-</div>
+  <div class="arrow2">
+    <a href="#" class="smooth arrow1"><i class="arrow up smooth"></i></a>
+  </div>
+  <div class="title" style="width:268px; margin-top:60px;">Experience.</div>
+  <div class="text" style="border-radius: 14px 14px 14px 14px;"><h5 class="tittle">Exeter Mathematics Certificate</h5>
+    As a part of the certificate I undertook numerous mathematical projects over two years, to discover and research practical applications of maths far beyond the scope of A-Level. These projects include research into Fourier transforms and series, public-speaking, presentations to the National Hydrographic Office, and experimental programming using virtual reality.
+    <div class="subtitle"><br>CHRISTMAS LECTURES - EXETER UNIVERSITY<hr></div>
+As a small group, we researched into the Fourier Transform and Series, incorporating advanced mathematics and programming knowledge to finally present at Exeter University in front of over 600 people, consisting of lecturers, students and members of the public at the Christmas Lectures. Without question, this further developed my confidence and clear communication skills in presenting, through collaboration and the experience of working as a part of a team.
+
+<div class="subtitle"><br>VECTORISING RASTER CHARTS - UKHO<hr></div>
+Another project I chose to undertake with a small group of other students was 'Vectorising Raster Charts', which was undertaken in association with the UK Hydrographic Office (UKHO). With copies of their globally distributed charts, our task was to vectorise these images that had been initially hand drawn over several hundred years ago, so that the charts could be digitally analysed. We later presented our results in front of a panel of UKHO managers, who were able to use our program for their purpose in industry.
+  </div>
+  <div id="act" style="margin-bottom:0px; text-align:center;color:none;font-size:0px margin-bottom: 100px;">-</div>
+  <div class="arrow2">
+    <a href="#" class="smooth arrow1"><i class="arrow up smooth"></i></a>
+  </div>
+  <div class="title" style="width:170px; margin-top:60px;">Activity.</div>
+  <div class="text" style="border-radius: 14px 14px 14px 14px;">
+  <h5 class="tittle">ACTIVITY FEED</h5>
+
+  <!-- Blog -->
+  <section class="blog blog-page padding-20 padding-top-50 padding-bottom-50 ">
+
+    <!-- Blog Post -->
+    <article> <img class="img-responsive" src="images/debris.jpg" alt="" >
+      <div class="post-info">
+        <div class="post-in">
+          <div class="extra"> <span><i class=" glyphicon glyphicon-calendar"></i>Jan 11 2019</span> <span class="margin-left-15"><i class="glyphicon glyphicon-user"></i>Alex</span> <span class="margin-left-15"><i class="glyphicon glyphicon-comment"></i> Featured</span></div>
+          <a href="#." class="stitle"> Modelling the Dynamical Motion of Space Debris </a>
+          <p>Space debris is an ever-increasing issue which poses a huge threat towards space exploration in the future. With space venturing becoming more routine, if something is not done this problem will only intensify.  In this project, I began to explore the possible damage caused as a result of the debris; moving onto a few methods that...
+          </p>
+          <a onclick="openNav2()" class="blank rdmore">Read More <i class="fa fa-angle-right"></i></a> </div>
+      </div>
+    </article>
+
+    <!-- BLOG POST --><br>
+    <article> <img class="img-responsive" src="images/rod.png" alt="" >
+      <div class="post-info">
+        <div class="post-in">
+          <div class="extra"> <span><i class=" glyphicon glyphicon-calendar"></i>Dec 15 2018</span> <span class="margin-left-15"><i class="glyphicon glyphicon-user"></i>Alex</span> <span class="margin-left-15"><i class="glyphicon glyphicon-comment"></i> Featured</span></div>
+          <a href="#." class="stitle"> Modelling the Behaviour of Lightning </a><br>
+          <p>Lightning and thunder clouds form an integral part of the climate in many areas across the world, becoming more prevalent due to an increasing rate in global warming. They produce numerous detrimental effects to civilisation, particularly  in  poorer regions without the capabilities to provide necessary protection to inhabitants.  In this ...</p>
+          <a onclick="openNav1()" class="blank rdmore">Read More <i class="fa fa-angle-right"></i></a> </div>
+      </div>
+    </article>
+
+    <!-- BLOG POST --><br>
+
+    <article> <img class="img-responsive" src="images/vr.png" alt="" >
+      <div class="post-info">
+        <div class="post-in">
+          <div class="extra"> <span><i class=" glyphicon glyphicon-calendar"></i>Apr 21 2017</span> <span class="margin-left-15"><i class="glyphicon glyphicon-user"></i>Alex</span> <span class="margin-left-15"><i class="glyphicon glyphicon-comment"></i> Featured</span></div>
+          <a href="#." class="stitle"> Programming in Virtual Reality </a>
+          <p> As virtual reality becomes evermore prominent in the modern day, I aimed to investigate its exciting limits and prove just what is and may be possible as VR continues to grow. Incorporating mathematics into this project, one of my goals was to create an apparent four-dimensional Klein Bottle in virtual reality, using Unity 3D, Steam VR...</p>
+          <a onclick="openNav3()" class="blank rdmore">Read More <i class="fa fa-angle-right"></i></a> </div>
+      </div>
+    </article>
+
+  </section>
+</div>
+
+  <div id="contact" style="margin-bottom:0px; text-align:center;color:none;font-size:0px; margin-bottom: 100px;">-</div>
+  <div class="arrow2">
+    <a href="#" class="smooth arrow1"><i class="arrow up smooth"></i></a>
+  </div>
+  <div class="title" style="width:275px;">Contact Me.</div>
+  <div class="contact1">
+    <div class="map">
+      <div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=dh1%201jl&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.embedgooglemap.net"></a></div>
+</div>
+    </div>
+  <div class="contact text" style="padding: 5px 5px 20px 5px; margin-bottom: 50px;margin-left: 40px; width: 500px">
+    <h5 class="tittle">Social</h5>
+
+  <div class="social-icon bor-btm padding-25">
+    <ul>
+      <li> <a href="https://www.linkedin.com/in/alex-rowan-smith-568882170/"> <img src="images/linkedin.png" alt="" style="  margin-right:20px;"/> </a> </li>
+      <li> <a href="skype:live:alexrowansmith_1?userinfo"> <img src="images/skype.png" alt=""/> </a> </li>
+    </ul>
+
+  </div>
+
+  <!-- Contact Me -->
+  <h5 class="tittle">Send an Email</h5><br>
+  <div class="contact padding-25" style="margin-top:10px;">
+
+    <form action="mailto:alexrowansmith@googlemail.com" method="GET">
+        <input id="subject" name="subject" placeholder="Subject" type="text" style="cursor:text;	background-color: rgba(192, 192, 192, 0.60);
+          border-style: solid;
+          border-width: 1.5px;
+          border-radius: 2px;
+          border-color: white;"/>
+        <textarea name="body" placeholder="Message"></textarea>
+        <input class="blank" type="submit" id="btn" value="Create Email" />
+    </form>
+
+  </div>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style="margin:auto; text-align:center; bottom: -5px;">
+<p class="lu">Last Updated: 01.10.2020</p>
+</div>
+
+</body>
+</html>
+<script>var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+}
+const progress = document.querySelector('.progress-done');
+
+progress.style.width = progress.getAttribute('data-done') + '%';
+progress.style.opacity = 1;
+
+const progress1 = document.querySelector('.progress-done1');
+
+progress1.style.width = progress1.getAttribute('data-done1') + '%';
+progress1.style.opacity = 1;
+
+const progress2 = document.querySelector('.progress-done2');
+
+progress2.style.width = progress2.getAttribute('data-done2') + '%';
+progress2.style.opacity = 1;
+
+const progress3 = document.querySelector('.progress-done3');
+
+progress3.style.width = progress3.getAttribute('data-done3') + '%';
+progress3.style.opacity = 1;
+
+const progress4 = document.querySelector('.progress-done4');
+
+progress4.style.width = progress4.getAttribute('data-done4') + '%';
+progress4.style.opacity = 1;
+</script>

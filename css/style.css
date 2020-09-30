@@ -2980,6 +2980,26 @@ blockquote {
 .navbar-collapse.in{
 	overflow:inherit;
 }
+.blurred-box{
+  position: relative;
+  background: inherit;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.blurred-box:after{
+ content: '';
+ background: inherit;
+ position: absolute;
+ left: -25px;
+ left position
+ right: 0;
+ top: -25px;
+ top position
+ bottom: 0;
+ box-shadow: inset 0 0 0 200px rgba(255,255,255,0.5);
+ filter: blur(10px);
+}
 #content {
 }
 #content.bg {
